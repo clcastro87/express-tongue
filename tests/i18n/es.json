@@ -1,0 +1,12 @@
+{
+  "lang": "es",
+  "language": "Español",
+  "sports": {
+	"54b6d5119f9b78cacdc7cfee": "Atletismo",
+	"5488af27f39b4b2ae406c581": "Baloncesto"
+  },
+  "strings": {
+	"test": "Prueba",
+	"test2": "Prueba2"
+  }
+}

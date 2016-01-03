@@ -1,0 +1,12 @@
+{
+  "lang": "ca",
+  "language": "Catalán",
+  "sports": {
+	"54b6d5119f9b78cacdc7cfee": "Atletisme",
+	"5488af27f39b4b2ae406c581": "Bàsquet"
+  },
+  "strings": {
+	"test": "Prova",
+	"test2": "Prova2"
+  }
+}
