@@ -17,8 +17,8 @@
     var fs = require('fs');
     var path = require('path');
     var express = require('express');
-    var debug = DEBUG ? require('debug')(DEBUG_SIGNATURE) : function () {
-    };
+    //var debug = DEBUG ? require('debug')(DEBUG_SIGNATURE) : function () {};
+    var debug = require('debug')(DEBUG_SIGNATURE);
 
     // Module exports
     i18n.localize = localizeMiddleware;
@@ -27,7 +27,7 @@
      * Generates an Express middleware to handle sites in multiple languages.
      *
      * This middleware injects the variable i18n inside res.locals, for usage inside template engines. Also is you are
-     * planning to use localization in the client side for example in SPA, then you have several endpoints which helps
+     * planning to use localization on client side; for example in SPA, then you have several endpoints which helps
      * you to develop a fully localized page.
      *
      * ### Options:
@@ -38,11 +38,15 @@
      *   to deactivate some language
      *   - `endpointEnabled` {Boolean} Enables API endpoint for usage in client apps. Defaults to `false`
      *   - `endpointPath` {String} Route in which endpoint will be mounted. Defaults to `/i18n`
+     *   - `queryStringEnabled` {Boolean} Allows language replacement by setting key in querystring.
+     *   - `queryStringKey` {String} Setup key used in querystring to define current language. Defaults to `hl`.
+     *   - `langCookie` {String} Cookie name for storing current locale.
      *
      * @param {Object} options
      * @returns {Function} Express middleware function.
      */
     /* jshint maxcomplexity: 12 */
+    /* jshint -W071 */
     function localizeMiddleware(options) {
 
         // Set default options if not present
@@ -65,6 +69,7 @@
         var resources = {};
         var defaultLang = {};
         var languages = [];
+        var cookieTTL = 365 * 24 * 3600000; // 1 year
 
         /**
          * Maps language files in i18n directory
@@ -193,8 +198,7 @@
             }
             else if (req.query && queryValue && queryValue.length === 2) {
                 res.locals.i18n = getLocaleData(queryValue);
-                var ttl = 365 * 24 * 3600000;
-                res.cookie(options.langCookie, queryValue, {maxAge: ttl});
+                res.cookie(options.langCookie, queryValue, {maxAge: cookieTTL});
             }
             else if (req.cookies && req.cookies[options.langCookie]) {
                 debug('Setting according to cookie language.');

@@ -10,8 +10,8 @@
 .installed.cfg
 _gh_pages/*
 
-.idea/*
-.svn/*
+.idea
+.svn
 
 bin
 cfcache
