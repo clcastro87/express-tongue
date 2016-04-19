@@ -1,8 +1,7 @@
 # express-tongue
 
-[![NPM Version][npm-image]][npm-url]
-[![NPM Downloads][downloads-image]][downloads-url]
-[![Build Status][travis-image]][travis-url]
+[![NPM version](https://img.shields.io/npm/v/express-tongue.svg?style=flat)](https://www.npmjs.com/package/express-tongue)
+[![NPM Downloads](https://img.shields.io/npm/dm/express-tongue.svg)](https://www.npmjs.com/package/express-tongue)
 
 **Express middleware to handle sites in multiple languages.**
 
