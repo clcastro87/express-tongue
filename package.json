@@ -1,6 +1,6 @@
 {
   "name": "express-tongue",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Localization library for Express. It works with every template engine and exposes a json endpoint to consume on client side.",
   "main": "src/middleware.js",
   "scripts": {
