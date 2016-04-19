@@ -2,7 +2,11 @@
 
 [![NPM version](https://img.shields.io/npm/v/express-tongue.svg?style=flat)](https://www.npmjs.com/package/express-tongue)
 [![NPM Downloads](https://img.shields.io/npm/dm/express-tongue.svg)](https://www.npmjs.com/package/express-tongue)
-
+[![Build Status](https://travis-ci.org/clcastro87/express-tongue.svg?branch=master)](https://travis-ci.org/clcastro87/express-tongue)
+[![Issues](https://img.shields.io/github/issues/clcastro87/express-tongue.svg)](https://travis-ci.org/clcastro87/express-tongue)
+[![GitHub forks](https://img.shields.io/github/forks/clcastro87/express-tongue.svg)](https://github.com/clcastro87/express-tongue/network)
+[![GitHub stars](https://img.shields.io/github/stars/clcastro87/express-tongue.svg)](https://github.com/clcastro87/express-tongue/stargazers)
+[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/clcastro87/express-tongue/master/LICENSE)
 
 **Express middleware to handle sites in multiple languages.**
 
