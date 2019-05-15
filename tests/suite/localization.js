@@ -100,4 +100,8 @@ describe('Localization', function () {
             });
     });
 
+    after(function() {
+        process.exit();
+    });
+
 });

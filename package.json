@@ -1,6 +1,6 @@
 {
   "name": "express-tongue",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Localization library for Express. It works with every template engine and exposes a json endpoint to consume on client side.",
   "main": "src/middleware.js",
   "scripts": {
@@ -24,20 +24,14 @@
     "node": ">= 0.10.0"
   },
   "dependencies": {
-    "lodash": "^2.4.1",
-    "express": "^4.9.3"
+    "express": "^4.16.4",
+    "lodash": "^4.17.11"
   },
   "devDependencies": {
+    "chai": "^1.10.0",
     "debug": "^2.0.0",
+    "mocha": "^6.1.4",
     "morgan": "^1.1.1",
-    "gulp": "^3.8.10",
-    "gulp-jscs": "^1.1.2",
-    "gulp-jshint": "^1.7.1",
-    "gulp-load-plugins": "^0.7.0",
-    "gulp-util": "^3.0.1",
-    "jshint-stylish": "^1.0.0",
-    "mocha": "^1.21.5",
-    "supertest": "^1.1.0",
-    "chai": "^1.10.0"
+    "supertest": "^4.0.2"
   }
 }
