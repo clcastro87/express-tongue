@@ -1,107 +1,103 @@
 /**
- * Copyright 2015
- * Developed by Spissa Software Solutions
- * Created by Carlos on 1/1/2016.
+ * @author: Carlos Luis Castro Márquez
  */
 
-var expect = require('chai').expect;
-var app = require('../server').app;
-var request = require('supertest');
+const expect = require("chai").expect;
+const app = require("../server").app;
+const request = require("supertest");
 
-describe('Localization', function () {
-
-    it('localization endpoint available', function (done) {
+describe("Localization", function () {
+    it("localization endpoint available", function (done) {
         request(app)
-            .get('/i18n')
+            .get("/i18n")
             .expect(200)
             .end(function (err, res) {
                 expect(res.body).to.not.null();
-                var json = res.body;
-                expect(json).to.be.an('object');
-                expect(json.lang).to.be.a('string');
-                expect(json.language).to.be.a('string');
-                expect(json.strings).to.be.a('object');
+                const json = res.body;
+                expect(json).to.be.an("object");
+                expect(json.lang).to.be.a("string");
+                expect(json.language).to.be.a("string");
+                expect(json.strings).to.be.a("object");
                 done(err);
             });
     });
 
-    it('localization languages available', function (done) {
+    it("localization languages available", function (done) {
         request(app)
-            .get('/i18n/languages')
+            .get("/i18n/languages")
             .expect(200)
             .end(function (err, res) {
                 expect(res.body).to.not.null();
-                var json = res.body;
-                expect(json).to.be.an('array');
+                const json = res.body;
+                expect(json).to.be.an("array");
                 done(err);
             });
     });
 
-    it('localization strings available', function (done) {
+    it("localization strings available", function (done) {
         request(app)
-            .get('/i18n/strings')
+            .get("/i18n/strings")
             .expect(200)
             .end(function (err, res) {
                 expect(res.body).to.not.null();
-                var json = res.body;
-                expect(json).to.be.an('object');
+                const json = res.body;
+                expect(json).to.be.an("object");
                 expect(json.test).to.not.null();
                 done(err);
             });
     });
 
-    it('localization in default lang (en)', function (done) {
+    it("localization in default lang (en)", function (done) {
         request(app)
-            .get('/i18n')
+            .get("/i18n")
             .expect(200)
             .end(function (err, res) {
                 expect(res.body).to.not.null();
-                var json = res.body;
-                expect(json).to.be.an('object');
-                expect(json.lang).to.be.a('string');
-                expect(json.language).to.be.a('string');
-                expect(json.strings).to.be.a('object');
-                expect(json.lang).to.equal('en');
+                const json = res.body;
+                expect(json).to.be.an("object");
+                expect(json.lang).to.be.a("string");
+                expect(json.language).to.be.a("string");
+                expect(json.strings).to.be.a("object");
+                expect(json.lang).to.equal("en");
                 done(err);
             });
     });
 
-    it('localization in spanish using User-Agent', function (done) {
+    it("localization in spanish using User-Agent", function (done) {
         request(app)
-            .get('/i18n')
-            .set('Accept-Language', 'es')
+            .get("/i18n")
+            .set("Accept-Language", "es")
             .expect(200)
             .end(function (err, res) {
                 expect(res.body).to.not.null();
-                var json = res.body;
-                expect(json).to.be.an('object');
-                expect(json.lang).to.be.a('string');
-                expect(json.language).to.be.a('string');
-                expect(json.strings).to.be.a('object');
-                expect(json.lang).to.equal('es');
+                const json = res.body;
+                expect(json).to.be.an("object");
+                expect(json.lang).to.be.a("string");
+                expect(json.language).to.be.a("string");
+                expect(json.strings).to.be.a("object");
+                expect(json.lang).to.equal("es");
                 done(err);
             });
     });
 
-    it('localization in spanish using QueryString', function (done) {
+    it("localization in spanish using QueryString", function (done) {
         request(app)
-            .get('/i18n?hl=es')
+            .get("/i18n?hl=es")
             .expect(200)
             .end(function (err, res) {
                 expect(res.body).to.not.null();
-                var json = res.body;
-                expect(json).to.be.an('object');
-                expect(json.lang).to.be.a('string');
-                expect(json.language).to.be.a('string');
-                expect(json.strings).to.be.a('object');
-                expect(json.lang).to.equal('es');
-                expect('set-cookie', 'cookie=xp_i18n_lang; Path=/');
+                const json = res.body;
+                expect(json).to.be.an("object");
+                expect(json.lang).to.be.a("string");
+                expect(json.language).to.be.a("string");
+                expect(json.strings).to.be.a("object");
+                expect(json.lang).to.equal("es");
+                expect("set-cookie", "cookie=xp_i18n_lang; Path=/");
                 done(err);
             });
     });
 
-    after(function() {
+    after(function () {
         process.exit();
     });
-
 });
