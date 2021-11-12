@@ -21,7 +21,7 @@
     "url": "https://github.com/clcastro87/express-tongue"
   },
   "engines": {
-    "node": ">= 4.0"
+    "node": ">= 8.0"
   },
   "dependencies": {
     "express": "^4.16.4",
