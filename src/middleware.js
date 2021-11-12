@@ -5,20 +5,19 @@
  * @date: 05/02/2015
  */
 (function (i18n) {
-    'use strict';
+    "use strict";
 
     // Environment configuration
-    var env = process.env.NODE_ENV || 'development';
-    var DEBUG = env === 'development';
-    var DEBUG_SIGNATURE = 'i18n';
+    var env = process.env.NODE_ENV || "development";
+    var DEBUG = env === "development";
+    var DEBUG_SIGNATURE = "i18n";
 
     // Module requires
-    var _ = require('lodash');
-    var fs = require('fs');
-    var path = require('path');
-    var express = require('express');
-    //var debug = DEBUG ? require('debug')(DEBUG_SIGNATURE) : function () {};
-    var debug = require('debug')(DEBUG_SIGNATURE);
+    var _ = require("lodash");
+    var fs = require("fs");
+    var path = require("path");
+    var express = require("express");
+    var debug = require("debug")(DEBUG_SIGNATURE);
 
     // Module exports
     i18n.localize = localizeMiddleware;
@@ -48,19 +47,18 @@
     /* jshint maxcomplexity: 12 */
     /* jshint -W071 */
     function localizeMiddleware(options) {
-
         // Set default options if not present
         options = options || {};
-        options.defaultLang = options.defaultLang || 'en';
-        options.path = options.path || path.join(process.cwd(), 'i18n');
+        options.defaultLang = options.defaultLang || "en";
+        options.path = options.path || path.join(process.cwd(), "i18n");
         options.languages = options.languages || mapDirectoryFiles();
         options.endpointEnabled = options.endpointEnabled || false;
-        options.endpointPath = options.endpointPath || '/i18n';
+        options.endpointPath = options.endpointPath || "/i18n";
         options.queryStringEnabled = options.queryStringEnabled || false;
-        options.queryStringKey = options.queryStringKey || 'hl';
-        options.langCookie = options.langCookie || 'xp_i18n_lang';
+        options.queryStringKey = options.queryStringKey || "hl";
+        options.langCookie = options.langCookie || "xp_i18n_lang";
 
-        debug('Configuration options:', options);
+        debug("Configuration options:", options);
 
         // Private fields
         var languagesConfigured = options.languages;
@@ -80,12 +78,15 @@
             var available = [];
             fs.readdirSync(options.path)
                 .filter(function (file) {
-                    return (file.indexOf('.') !== 0) && (file.indexOf('.json') === file.length - 5);
+                    return (
+                        file.indexOf(".") !== 0 &&
+                        file.indexOf(".json") === file.length - 5
+                    );
                 })
                 .forEach(function (file) {
-                    available.push(file.substring(0, file.indexOf('.')));
+                    available.push(file.substring(0, file.indexOf(".")));
                 });
-            debug('Languages in directory:', available);
+            debug("Languages in directory:", available);
             return available;
         }
 
@@ -94,16 +95,16 @@
          * */
         function initialize() {
             // Build default lang
-            debug('Building default language:', defaultLangAbbr);
+            debug("Building default language:", defaultLangAbbr);
             defaultLang = buildLang(defaultLangAbbr);
             // Build all these languages
             languagesConfigured.forEach(function (lang) {
                 if (lang !== defaultLangAbbr) {
-                    debug('Building lang:', lang);
+                    debug("Building lang:", lang);
                     buildLang(lang);
                 }
             });
-            languages = _.map(resources, 'lang');
+            languages = _.map(resources, "lang");
         }
 
         /**
@@ -114,7 +115,7 @@
          * */
         function buildLangPath(lang) {
             // Secure with realpath to avoid wrong absolute uri
-            return fs.realpathSync(path.join(languagesPath, lang + '.json'));
+            return fs.realpathSync(path.join(languagesPath, lang + ".json"));
         }
 
         /**
@@ -133,7 +134,10 @@
             // Get key values from file, and overrides an empty object for security
             var keyValues = _.extend({}, require(langPath));
             // Set strings from default language if does not exists this key in language selected.
-            keyValues.strings = _.defaults(keyValues.strings, defaultLang.strings);
+            keyValues.strings = _.defaults(
+                keyValues.strings,
+                defaultLang.strings
+            );
             // Set language data in cache.
             resources[lang] = keyValues;
             // Return lang dictionary
@@ -148,7 +152,7 @@
          * */
         function getLocaleData(langString) {
             if (!_.isString(langString)) {
-                throw new TypeError('Wrong method input!');
+                throw new TypeError("Wrong method input!");
             }
             // If string get language data
             return getLang(langString);
@@ -176,7 +180,7 @@
          * */
         function getLanguages() {
             return _.map(resources, function (item) {
-                return {name: item.language, value: item.lang};
+                return { name: item.language, value: item.lang };
             });
         }
 
@@ -193,28 +197,30 @@
             var queryValue = req.query[i18nQueryKey];
 
             if (req.user && req.user.language) {
-                debug('Setting according to user language.');
+                debug("Setting according to user language.");
                 res.locals.i18n = getLocaleData(req.user.language);
-            }
-            else if (req.query && queryValue && queryValue.length === 2) {
+            } else if (req.query && queryValue && queryValue.length === 2) {
                 res.locals.i18n = getLocaleData(queryValue);
-                res.cookie(options.langCookie, queryValue, {maxAge: cookieTTL});
-            }
-            else if (req.cookies && req.cookies[options.langCookie]) {
-                debug('Setting according to cookie language.');
-                res.locals.i18n = getLocaleData(req.cookies[options.langCookie]);
-            }
-            else {
-                debug('Setting according to User-Agent.');
+                res.cookie(options.langCookie, queryValue, {
+                    maxAge: cookieTTL,
+                });
+            } else if (req.cookies && req.cookies[options.langCookie]) {
+                debug("Setting according to cookie language.");
+                res.locals.i18n = getLocaleData(
+                    req.cookies[options.langCookie]
+                );
+            } else {
+                debug("Setting according to User-Agent.");
                 // Ask express for language accepted according to request
                 var accepted = req.acceptsLanguages(languages);
                 // If there is no one accepted then select default
                 if (!accepted) {
-                    debug('User-Agent does not accept an language, setting default instead.');
+                    debug(
+                        "User-Agent does not accept an language, setting default instead."
+                    );
                     accepted = defaultLangAbbr;
-                }
-                else {
-                    debug('User-Agent accepts:', accepted);
+                } else {
+                    debug("User-Agent accepts:", accepted);
                 }
                 res.locals.i18n = getLocaleData(accepted);
             }
@@ -259,19 +265,18 @@
 
         // Builds sub router and returns as middleware
         var router = express.Router();
-        router.all('*', serveLocaleData);
+        router.all("*", serveLocaleData);
         if (options.endpointEnabled) {
-            debug('Setting i18n endpoint!');
+            debug("Setting i18n endpoint!");
             var endpointPath = options.endpointPath;
-            var lastSlash = endpointPath.lastIndexOf('/');
-            if (lastSlash === (endpointPath.length - 1)) {
+            var lastSlash = endpointPath.lastIndexOf("/");
+            if (lastSlash === endpointPath.length - 1) {
                 endpointPath.substring(0, lastSlash);
             }
             router.get(endpointPath, serveResources);
-            router.get(endpointPath + '/strings', serveStrings);
-            router.get(endpointPath + '/languages', serveLanguages);
+            router.get(endpointPath + "/strings", serveStrings);
+            router.get(endpointPath + "/languages", serveLanguages);
         }
         return router;
     }
-
 })(module.exports);

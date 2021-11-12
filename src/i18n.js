@@ -5,25 +5,24 @@
  * @copyright: Spissa Software Solutions
  * @date: 05/02/2015
  */
-(function (i18n){
-    'use strict';
+(function (i18n) {
+    "use strict";
 
     // Module requires
-    var _ = require('lodash');
-    var fs = require('fs');
-    var path = require('path');
-    var config = require('./config');
-    var express = require('express');
+    var _ = require("lodash");
+    var fs = require("fs");
+    var path = require("path");
+    var config = require("./config");
+    var express = require("express");
 
     // Module exports
     i18n.localize = localizeMiddleware;
 
     function localizeMiddleware(options) {
-
         // Set default options if not present
         options = options || {};
-        var defaultLangAbbr = options.defaultLangAbbr || 'es';
-        var languagesPath = options.path || 'src/server/i18n';
+        var defaultLangAbbr = options.defaultLangAbbr || "es";
+        var languagesPath = options.path || "src/server/i18n";
 
         // Private fields
         var resources = {};
@@ -33,16 +32,16 @@
         /**
          * Initializes localization engine.
          * */
-        function initialize(){
+        function initialize() {
             // Build default lang
             defaultLang = buildLang(defaultLangAbbr);
             // Get languages specified in configuration file
-            var configLanguages = config.get('languages') || [];
+            var configLanguages = config.get("languages") || [];
             // Build all these languages
             for (var i = 0; i < configLanguages.length; i++) {
                 buildLang(configLanguages[i]);
             }
-            languages = _.map(resources, 'lang');
+            languages = _.map(resources, "lang");
         }
 
         /**
@@ -52,7 +51,7 @@
          * */
         function buildLangPath(lang) {
             // Secure with realpath to avoid wrong absolute uri
-            return fs.realpathSync(languagesPath + path.sep + lang + '.json');
+            return fs.realpathSync(languagesPath + path.sep + lang + ".json");
         }
 
         /**
@@ -68,9 +67,12 @@
             // Get lang path
             var langPath = buildLangPath(lang);
             // Get key values from file, and overrides an empty object for security
-            var keyValues =  _.extend({}, require(langPath));
+            var keyValues = _.extend({}, require(langPath));
             // Set strings from default language if does not exists this key in language selected.
-            keyValues.strings = _.defaults(keyValues.strings, defaultLang.strings);
+            keyValues.strings = _.defaults(
+                keyValues.strings,
+                defaultLang.strings
+            );
             // Set language data in cache.
             resources[lang] = keyValues;
             // Return lang dictionary
@@ -86,18 +88,16 @@
             if (_.isString(langString)) {
                 // If string get language data
                 return getLang(langString);
-            }
-            else if (_.isArray(langString)) {
+            } else if (_.isArray(langString)) {
                 // If array validate because sometimes express return null as string and causes a bug.
-                if (langString.length === 1 && langString[0] === 'null') {
+                if (langString.length === 1 && langString[0] === "null") {
                     langString = [defaultLangAbbr];
                 }
                 // Then get first available language by priority
                 return getLangs(langString);
-            }
-            else  {
+            } else {
                 // Otherwise throw an error
-                throw new Error('Wrong method input!');
+                throw new Error("Wrong method input!");
             }
         }
 
@@ -108,7 +108,7 @@
          * */
         function getLang(lang) {
             // If there are available resources for the language given returns it
-            if (_.has(resources, lang)){
+            if (_.has(resources, lang)) {
                 return resources[lang];
             }
             // Otherwise return default resources
@@ -144,11 +144,10 @@
             for (var i = 0; i < langArray.length; i++) {
                 var item = langArray[i];
                 // Get only language not locale
-                var pos = item.indexOf('-');
+                var pos = item.indexOf("-");
                 if (pos !== -1) {
                     detectedLangs.push(item.substr(0, pos));
-                }
-                else {
+                } else {
                     detectedLangs.push(item);
                 }
             }
@@ -162,8 +161,8 @@
          * Get languages available from strings.
          * */
         function getLanguages() {
-            return _.map(resources, function(item){
-                return {name: item.language, value: item.lang};
+            return _.map(resources, function (item) {
+                return { name: item.language, value: item.lang };
             });
         }
 
@@ -179,11 +178,9 @@
 
             if (req.user && req.user.language) {
                 res.locals.i18n = getLocaleData(req.user.language);
-            }
-            else if (req.cookies && req.cookies.language) {
+            } else if (req.cookies && req.cookies.language) {
                 res.locals.i18n = getLocaleData(req.cookies.language);
-            }
-            else {
+            } else {
                 // Ask express for language accepted according to request
                 var accepted = req.acceptsLanguages(languages);
                 // If there is no one accepted then select default
@@ -233,11 +230,10 @@
 
         // Build sub router and return as middleware
         var router = express.Router();
-        router.all('*', serveLocaleData);
-        router.get('/i18n', serveResources);
-        router.get('/i18n/strings', serveStrings);
-        router.get('/i18n/languages', serveLanguages);
+        router.all("*", serveLocaleData);
+        router.get("/i18n", serveResources);
+        router.get("/i18n/strings", serveStrings);
+        router.get("/i18n/languages", serveLanguages);
         return router;
     }
-
 })(module.exports);
