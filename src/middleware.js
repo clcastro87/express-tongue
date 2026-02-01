@@ -11,7 +11,7 @@ const DEBUG = env === "development";
 const DEBUG_SIGNATURE = "i18n";
 
 // Module requires
-const { map, extend, defaults, isString, has } = require("./utils");
+const { map, extend, isString, has } = require("./utils");
 const fs = require("fs");
 const path = require("path");
 const express = require("express");
