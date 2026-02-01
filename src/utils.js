@@ -17,7 +17,9 @@ function map(collection, iteratee) {
     if (Array.isArray(collection)) {
         return collection.map(iteratee);
     }
-    return Object.keys(collection).map((k) => iteratee(collection[k], k));
+    return Object.keys(collection)
+        .filter((k) => collection.hasOwnProperty(k))
+        .map((k) => iteratee(collection[k], k));
 }
 
 /**
@@ -29,7 +31,7 @@ function extend(/*, ...sources */) {
     let target = {};
     for (let i = 0; i < arguments.length; i++) {
         const src = arguments[i];
-        if (src == null) continue;
+        if (src == null || typeof src !== "object") continue;
         target = Object.assign(target, src);
     }
     return target;
