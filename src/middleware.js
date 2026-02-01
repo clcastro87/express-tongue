@@ -11,7 +11,7 @@ const DEBUG = env === "development";
 const DEBUG_SIGNATURE = "i18n";
 
 // Module requires
-const _ = require("lodash");
+const { map, extend, isString, has } = require("./utils");
 const fs = require("fs");
 const path = require("path");
 const express = require("express");
@@ -59,13 +59,13 @@ function localizeMiddleware(options) {
     debug("Configuration options:", options);
 
     // Private fields
-    var languagesConfigured = options.languages;
-    var defaultLangAbbr = options.defaultLang;
-    var languagesPath = options.path;
-    var resources = {};
-    var defaultLang = {};
-    var languages = [];
-    var cookieTTL = 365 * 24 * 3600000; // 1 year
+    const languagesConfigured = options.languages;
+    const defaultLangAbbr = options.defaultLang;
+    const languagesPath = options.path;
+    let resources = {};
+    let defaultLang = {};
+    let languages = [];
+    const cookieTTL = 365 * 24 * 3600000; // 1 year
 
     /**
      * Maps language files in i18n directory
@@ -102,7 +102,7 @@ function localizeMiddleware(options) {
                 buildLang(lang);
             }
         });
-        languages = _.map(resources, "lang");
+        languages = map(resources, (langObj) => langObj.lang);
     }
 
     /**
@@ -128,11 +128,14 @@ function localizeMiddleware(options) {
             return false;
         }
         // Get lang path
-        var langPath = buildLangPath(lang);
+        const langPath = buildLangPath(lang);
         // Get key values from file, and overrides an empty object for security
-        var keyValues = _.extend({}, require(langPath));
+        let keyValues = extend({}, require(langPath));
         // Set strings from default language if does not exists this key in language selected.
-        keyValues.strings = _.defaults(keyValues.strings, defaultLang.strings);
+        keyValues.strings = extend(
+            defaultLang.strings || {},
+            keyValues.strings || {},
+        );
         // Set language data in cache.
         resources[lang] = keyValues;
         // Return lang dictionary
@@ -146,7 +149,7 @@ function localizeMiddleware(options) {
      * @returns {Object} Localization data object.
      * */
     function getLocaleData(langString) {
-        if (!_.isString(langString)) {
+        if (!isString(langString)) {
             throw new TypeError("Wrong method input!");
         }
         // If string get language data
@@ -161,7 +164,7 @@ function localizeMiddleware(options) {
      * */
     function getLang(lang) {
         // If there are available resources for the language given returns it
-        if (_.has(resources, lang)) {
+        if (has(resources, lang)) {
             return resources[lang];
         }
         // Otherwise return default resources
@@ -174,7 +177,7 @@ function localizeMiddleware(options) {
      * @returns {Array} Array with information referred to loaded languages.
      * */
     function getLanguages() {
-        return _.map(resources, function (item) {
+        return map(resources, function (item) {
             return { name: item.language, value: item.lang };
         });
     }
@@ -209,7 +212,7 @@ function localizeMiddleware(options) {
             // If there is no one accepted then select default
             if (!accepted) {
                 debug(
-                    "User-Agent does not accept an language, setting default instead."
+                    "User-Agent does not accept an language, setting default instead.",
                 );
                 accepted = defaultLangAbbr;
             } else {
