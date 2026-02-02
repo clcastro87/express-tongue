@@ -18,6 +18,7 @@ app.use(
 app.use("/locals", function (req, res) {
     res.json(res.locals.i18n);
 });
-app.listen(4000);
+const server = app.listen(4000);
 
 exports.app = app;
+exports.server = server;
