@@ -24,7 +24,7 @@
     "node": ">= 18.0"
   },
   "dependencies": {
-    "express": "^4.16.4"
+    "express": "^4.22.1"
   },
   "devDependencies": {
     "chai": "^1.10.0",
