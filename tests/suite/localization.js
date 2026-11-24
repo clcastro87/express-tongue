@@ -2,6 +2,8 @@
  * @author: Carlos Luis Castro Márquez
  */
 
+const { after, describe, it } = require("node:test");
+
 const server = require("../server").server;
 
 const expect = require("chai").expect;
@@ -14,7 +16,7 @@ const request = require("supertest");
 
 describe("Localization", function () {
 
-    it("localization endpoint available", function (done) {
+    it("localization endpoint available", function (t, done) {
 
         request(app)
 
@@ -44,7 +46,7 @@ describe("Localization", function () {
 
 
 
-    it("localization languages available", function (done) {
+    it("localization languages available", function (t, done) {
 
         request(app)
 
@@ -68,7 +70,7 @@ describe("Localization", function () {
 
 
 
-    it("localization strings available", function (done) {
+    it("localization strings available", function (t, done) {
 
         request(app)
 
@@ -94,7 +96,7 @@ describe("Localization", function () {
 
 
 
-    it("localization in default lang (en)", function (done) {
+    it("localization in default lang (en)", function (t, done) {
 
         request(app)
 
@@ -126,7 +128,7 @@ describe("Localization", function () {
 
 
 
-    it("localization in spanish using User-Agent", function (done) {
+    it("localization in spanish using User-Agent", function (t, done) {
 
         request(app)
 
@@ -160,7 +162,7 @@ describe("Localization", function () {
 
 
 
-    it("localization in spanish using QueryString", function (done) {
+    it("localization in spanish using QueryString", function (t, done) {
 
         request(app)
 
@@ -194,7 +196,7 @@ describe("Localization", function () {
 
 
 
-    after(function (done) {
+    after(function (t, done) {
 
         server.close(done);
 
