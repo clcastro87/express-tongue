@@ -15,7 +15,7 @@ const { map, extend, isString, has } = require("./utils");
 const fs = require("fs");
 const path = require("path");
 const express = require("express");
-const debug = require("debug")(DEBUG_SIGNATURE);
+const debug = require("./debug")(DEBUG_SIGNATURE);
 
 // Module exports
 exports.localize = localizeMiddleware;
