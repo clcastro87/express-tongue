@@ -5,17 +5,11 @@
  */
 "use strict";
 
-// Environment configuration
-const env = process.env.NODE_ENV || "development";
-const DEBUG = env === "development";
-const DEBUG_SIGNATURE = "i18n";
-
 // Module requires
 const { map, extend, isString, has } = require("./utils");
 const fs = require("fs");
 const path = require("path");
 const express = require("express");
-const debug = require("./debug")(DEBUG_SIGNATURE);
 
 // Module exports
 exports.localize = localizeMiddleware;
@@ -56,8 +50,6 @@ function localizeMiddleware(options) {
     options.queryStringKey = options.queryStringKey || "hl";
     options.langCookie = options.langCookie || "xp_i18n_lang";
 
-    debug("Configuration options:", options);
-
     // Private fields
     const languagesConfigured = options.languages;
     const defaultLangAbbr = options.defaultLang;
@@ -84,7 +76,6 @@ function localizeMiddleware(options) {
             .forEach(function (file) {
                 available.push(file.substring(0, file.indexOf(".")));
             });
-        debug("Languages in directory:", available);
         return available;
     }
 
@@ -93,12 +84,10 @@ function localizeMiddleware(options) {
      * */
     function initialize() {
         // Build default lang
-        debug("Building default language:", defaultLangAbbr);
         defaultLang = buildLang(defaultLangAbbr);
         // Build all these languages
         languagesConfigured.forEach(function (lang) {
             if (lang !== defaultLangAbbr) {
-                debug("Building lang:", lang);
                 buildLang(lang);
             }
         });
@@ -195,7 +184,6 @@ function localizeMiddleware(options) {
         const queryValue = req.query[i18nQueryKey];
 
         if (req.user && req.user.language) {
-            debug("Setting according to user language.");
             res.locals.i18n = getLocaleData(req.user.language);
         } else if (req.query && queryValue && queryValue.length === 2) {
             res.locals.i18n = getLocaleData(queryValue);
@@ -203,20 +191,13 @@ function localizeMiddleware(options) {
                 maxAge: cookieTTL,
             });
         } else if (req.cookies && req.cookies[options.langCookie]) {
-            debug("Setting according to cookie language.");
             res.locals.i18n = getLocaleData(req.cookies[options.langCookie]);
         } else {
-            debug("Setting according to User-Agent.");
             // Ask express for language accepted according to request
             let accepted = req.acceptsLanguages(languages);
             // If there is no one accepted then select default
             if (!accepted) {
-                debug(
-                    "User-Agent does not accept an language, setting default instead.",
-                );
                 accepted = defaultLangAbbr;
-            } else {
-                debug("User-Agent accepts:", accepted);
             }
             res.locals.i18n = getLocaleData(accepted);
         }
@@ -263,7 +244,6 @@ function localizeMiddleware(options) {
     var router = express.Router();
     router.all("*", serveLocaleData);
     if (options.endpointEnabled) {
-        debug("Setting i18n endpoint!");
         const endpointPath = options.endpointPath;
         const lastSlash = endpointPath.lastIndexOf("/");
         if (lastSlash === endpointPath.length - 1) {

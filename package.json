@@ -28,7 +28,6 @@
   },
   "devDependencies": {
     "chai": "^1.10.0",
-    "debug": "^3.2.7",
     "morgan": "^1.10.1",
     "supertest": "^4.0.2"
   }
