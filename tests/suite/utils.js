@@ -1,4 +1,5 @@
 
+const { describe, it } = require("node:test");
 const expect = require("chai").expect;
 const utils = require("../../src/utils");
 

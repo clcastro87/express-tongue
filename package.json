@@ -4,7 +4,7 @@
   "description": "Localization library for Express. It works with every template engine and exposes a json endpoint to consume on client side.",
   "main": "src/middleware.js",
   "scripts": {
-    "test": "mocha tests/suite",
+    "test": "node --test tests/suite/*.js",
     "start": "node tests/server.js"
   },
   "keywords": [
@@ -29,7 +29,6 @@
   "devDependencies": {
     "chai": "^1.10.0",
     "debug": "^3.2.7",
-    "mocha": "^12.0.3",
     "morgan": "^1.10.1",
     "supertest": "^4.0.2"
   }
